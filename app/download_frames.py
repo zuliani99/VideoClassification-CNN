@@ -5,6 +5,7 @@ import cv2
 import youtube_dl
 import shutil
 import time
+import tqdm
 from termcolor import colored
 
 
@@ -19,7 +20,7 @@ def process_video(url, skip_frames, directory, id, total_frames):
         ret, frame = cap.read()
         
         if not ret: 
-            print(colored('ERROR:', 'red') + ' can not open the video')
+            #print(colored('ERROR:', 'red') + ' can not open the video')
             break
         
         filename = os.path.join('/data', directory, id, f'shot{str(x)}.png')
@@ -30,14 +31,16 @@ def process_video(url, skip_frames, directory, id, total_frames):
 
 
 
-def take_shots_from_url(directory, percentage_of_frames, length, ids_video_url):
-    count, video_url = ids_video_url
+def take_shots_from_url(directory, percentage_of_frames, ids_video_url): #'length' after frames perc
+    #count, video_url = ids_video_url
+    video_url = ids_video_url
     id = video_url.split('=')[1]
     try:
         if not os.path.exists(os.path.join('data',directory, id)):
             os.makedirs(os.path.join('data',directory, id))
 
-        ydl = youtube_dl.YoutubeDL({"quiet": True})
+        ydl_options = {"quiet": True, 'verbose': False, 'ignoreerrors': True, 'i': True}
+        ydl = youtube_dl.YoutubeDL(ydl_options)
         info_dict = ydl.extract_info(video_url, download=False)
 
         video_length = info_dict['duration'] * info_dict['fps']
@@ -51,13 +54,14 @@ def take_shots_from_url(directory, percentage_of_frames, length, ids_video_url):
                 video = format_id[res]
                 url = video.get('url', None)
                 if(video.get('url', None) != video.get('manifest_url', None)):
-                    print(colored((f'{count} / {length}'), 'green') + f' -> Obtaining frames of {video_url}, length {info_dict["duration"]}, fps: {info_dict["fps"]}, resolution: {res}p, skip rate: {skip_rate}')
+                    #print(colored((f'{count} / {length}'), 'green') + f' -> Obtaining frames of {video_url}, length {info_dict["duration"]}, fps: {info_dict["fps"]}, resolution: {res}p, skip rate: {skip_rate}')
+                    #print(f'Obtaining frames of {video_url}, length {info_dict["duration"]}, fps: {info_dict["fps"]}, resolution: {res}p, skip rate: {skip_rate}')
                     process_video(url, skip_rate, directory, id, info_dict['duration'] * info_dict['fps'])
                     break
-            else:
-                print(colored('ERROR:', 'red') + f'No {res}p resolution found, trying a higher one')
+            #else:
+                #print(colored('ERROR: ', 'red') + f'No {res}p resolution found, trying a higher one')
     except Exception as e:
-        print(colored('ERROR:', 'red') + e)
+        #print(colored('ERROR: ', 'red') + str(e))
         shutil.rmtree(os.path.join('data', directory, id))
 
 
@@ -88,6 +92,9 @@ def download_frames(url_lists):
     for url_list in url_lists:
         urls, directory = url_list
         start_time = time.time()
-        pool.map(functools.partial(take_shots_from_url, directory, 3, len(urls)), enumerate(urls))
+
+            #tqdm.tqdm(p.imap(_foo, range(30)), total=30)
+        list(tqdm.tqdm(pool.imap(functools.partial(take_shots_from_url, directory, 3), urls), total=len(urls)))
+            #pool.map(functools.partial(take_shots_from_url, directory, 3, len(urls)), enumerate(urls))
         pool.close()
         print(f"--- {time.time() - start_time} seconds ---")
