@@ -19,10 +19,9 @@ def process_video(url, skip_frames, directory, id, total_frames):
         ret, frame = cap.read()
         
         if not ret: 
-            print('Error can not open the video')
+            print(colored('ERROR:', 'red') + ' can not open the video')
             break
         
-        #filename = f'{directory}/{id}/shot{str(x)}.png'
         filename = os.path.join('/data', directory, id, f'shot{str(x)}.png')
         x += 1
         cv2.imwrite(filename.format(count), cv2.resize(frame, (256, 144), interpolation = cv2.INTER_AREA))
@@ -56,9 +55,9 @@ def take_shots_from_url(directory, percentage_of_frames, length, ids_video_url):
                     process_video(url, skip_rate, directory, id, info_dict['duration'] * info_dict['fps'])
                     break
             else:
-                print(f'No {res}p resolution found, trying a higher one')
+                print(colored('ERROR:', 'red') + f'No {res}p resolution found, trying a higher one')
     except Exception as e:
-        print(e)
+        print(colored('ERROR:', 'red') + e)
         shutil.rmtree(os.path.join('data', directory, id))
 
 
