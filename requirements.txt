@@ -1,4 +1,4 @@
-youtube_dl
 opencv-python
 tqdm
 termcolor
+yt-dlp

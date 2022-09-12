@@ -2,17 +2,14 @@ import functools
 import os
 from multiprocessing import Pool
 import cv2
-import youtube_dl
+import yt_dlp
 import shutil
 import time
 import tqdm
 from termcolor import colored
 
 
-#change package to remove the verbose mode
-
-
-def process_video(url, skip_frames, directory, id, total_frames):
+def process_video(url, skip_frames, directory, url_id, total_frames, lab):
     cap = cv2.VideoCapture(url)
     x = 0
     count = 0
@@ -20,49 +17,48 @@ def process_video(url, skip_frames, directory, id, total_frames):
         ret, frame = cap.read()
         
         if not ret: 
-            #print(colored('ERROR:', 'red') + ' can not open the video')
+            shutil.rmtree(os.path.join('data',directory, str(lab)))
             break
         
-        filename = os.path.join('/data', directory, id, f'shot{str(x)}.png')
+        filename = os.path.join('data', directory, str(lab), f'{url_id}_{str(x)}.png')
+        cv2.imwrite(filename, cv2.resize(frame, (256, 144), interpolation = cv2.INTER_AREA))
+        
         x += 1
-        cv2.imwrite(filename.format(count), cv2.resize(frame, (256, 144), interpolation = cv2.INTER_AREA))
         count += skip_frames
+  
     cap.release()
 
 
 
-def take_shots_from_url(directory, percentage_of_frames, ids_video_url): #'length' after frames perc
-    #count, video_url = ids_video_url
-    video_url = ids_video_url
-    id = video_url.split('=')[1]
-    try:
-        if not os.path.exists(os.path.join('data',directory, id)):
-            os.makedirs(os.path.join('data',directory, id))
+def take_shots_from_url(directory, percentage_of_frames, video_url): 
+        url, labels = video_url
+        url_id = url.split('=')[1]
+        
+        for lab in labels:
+            if not os.path.exists(os.path.join('data', directory, str(lab))):
+                os.makedirs(os.path.join('data',directory, str(lab)))
+        
+        try:
+            ydl_options = {"quiet": True, 'verbose': False}
 
-        ydl_options = {"quiet": True, 'verbose': False, 'ignoreerrors': True, 'i': True}
-        ydl = youtube_dl.YoutubeDL(ydl_options)
-        info_dict = ydl.extract_info(video_url, download=False)
+            with yt_dlp.YoutubeDL(ydl_options) as ydl:
+                info_dict = ydl.extract_info(url, download=False)
 
-        video_length = info_dict['duration'] * info_dict['fps']
-        tot_stored_frames = min((video_length * percentage_of_frames) // 100, 10)
-        skip_rate = video_length // tot_stored_frames
+                video_length = info_dict['duration'] * info_dict['fps']
+                tot_stored_frames = min((video_length * percentage_of_frames) // 100, 10)
+                skip_rate = video_length // tot_stored_frames
 
-        resolution_id = ['160', '133', '134', '135', '136']
-        format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
-        for res in resolution_id:
-            if res in list(format_id.keys()):
-                video = format_id[res]
-                url = video.get('url', None)
-                if(video.get('url', None) != video.get('manifest_url', None)):
-                    #print(colored((f'{count} / {length}'), 'green') + f' -> Obtaining frames of {video_url}, length {info_dict["duration"]}, fps: {info_dict["fps"]}, resolution: {res}p, skip rate: {skip_rate}')
-                    #print(f'Obtaining frames of {video_url}, length {info_dict["duration"]}, fps: {info_dict["fps"]}, resolution: {res}p, skip rate: {skip_rate}')
-                    process_video(url, skip_rate, directory, id, info_dict['duration'] * info_dict['fps'])
-                    break
-            #else:
-                #print(colored('ERROR: ', 'red') + f'No {res}p resolution found, trying a higher one')
-    except Exception as e:
-        #print(colored('ERROR: ', 'red') + str(e))
-        shutil.rmtree(os.path.join('data', directory, id))
+                resolution_id = ['160', '133', '134', '135', '136']
+                format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
+                for res in resolution_id:
+                    if res in list(format_id.keys()):
+                        video = format_id[res]
+                        url_dict = video.get('url', None)
+                        if(video.get('url', None) != video.get('manifest_url', None)):
+                            for lab in labels: process_video(url_dict, skip_rate, directory, url_id, video_length, lab)
+                            break
+        except Exception as e:
+            for lab in labels: shutil.rmtree(os.path.join('data',directory, str(lab)))
 
 
 def get_dataset():
@@ -91,10 +87,9 @@ def download_frames(url_lists):
 
     for url_list in url_lists:
         urls, directory = url_list
+        print(colored(f'--- Downloading {directory} ---', 'green'))
         start_time = time.time()
-
-            #tqdm.tqdm(p.imap(_foo, range(30)), total=30)
-        list(tqdm.tqdm(pool.imap(functools.partial(take_shots_from_url, directory, 3), urls), total=len(urls)))
-            #pool.map(functools.partial(take_shots_from_url, directory, 3, len(urls)), enumerate(urls))
-        pool.close()
-        print(f"--- {time.time() - start_time} seconds ---")
+        list(tqdm.tqdm(pool.imap(functools.partial(take_shots_from_url, directory, 3), list(urls.items())), total=len(list(urls.items()))))
+        print(colored(f'--- Download of {directory} took: {time.time() - start_time} seconds ---\n', 'green'))
+    
+    pool.close()
