@@ -39,7 +39,7 @@ def take_shots_from_url(directory, percentage_of_frames, video_url):
                 os.makedirs(os.path.join('data',directory, str(lab)))
         
         try:
-            ydl_options = {"quiet": True, 'verbose': False}
+            ydl_options = {"quiet": True, 'verbose': False} #, 'format': 'worst'}
 
             with yt_dlp.YoutubeDL(ydl_options) as ydl:
                 info_dict = ydl.extract_info(url, download=False)
@@ -57,6 +57,10 @@ def take_shots_from_url(directory, percentage_of_frames, video_url):
                         if(video.get('url', None) != video.get('manifest_url', None)):
                             for lab in labels: process_video(url_dict, skip_rate, directory, url_id, video_length, lab)
                             break
+                #url_dict = info_dict.get('url', None)
+                #if(info_dict.get('url', None) != info_dict.get('manifest_url', None)):
+                    #for lab in labels: process_video(url_dict, skip_rate, directory, url_id, video_length, lab)
+                    
         except Exception as e:
             for lab in labels: shutil.rmtree(os.path.join('data',directory, str(lab)))
 
