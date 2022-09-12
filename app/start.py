@@ -16,8 +16,6 @@ if __name__ == "__main__":
     
     DATA, LABELS = get_dataset()
 
-    #train_url_list = list(DATA[0].keys())
-    #test_url_list = list(DATA[1].keys())
     train_url_list, test_url_list = DATA
     
     download_frames([(train_url_list, 'train_shots'), (test_url_list, 'test_shots')])

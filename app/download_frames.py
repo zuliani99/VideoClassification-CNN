@@ -33,7 +33,7 @@ def take_shots_from_url(directory, percentage_of_frames, video_url):
         url_id = url.split('=')[1]
         
         try:
-            ydl_options = {"quiet": True, 'verbose': False}
+            ydl_options = {"quiet": True, 'verbose': False} #, 'format': 'worst'}
 
             with yt_dlp.YoutubeDL(ydl_options) as ydl:
                 info_dict = ydl.extract_info(url, download=False)
