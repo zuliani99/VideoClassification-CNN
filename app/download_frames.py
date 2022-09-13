@@ -8,6 +8,8 @@ import tqdm
 from termcolor import colored
 
 
+c = 0
+
 def process_video(url, skip_frames, directory, url_id, total_frames, labels):
 	cap = cv2.VideoCapture(url)
  
@@ -44,13 +46,30 @@ def take_shots_from_url(directory, percentage_of_frames, video_url):
 			tot_stored_frames = min((video_length * percentage_of_frames) // 100, 10)
 			skip_rate = video_length // tot_stored_frames
 			
-			formats = info_dict.get('formats', None)
-			for f in formats:
-				if f.get('format_note', None) == '144p':
-					url = f.get('url', None)
-					process_video(url, skip_rate, directory, url_id, video_length, labels)
-					break
+			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
+			if '160' in list(format_id.keys()):
+				url_dict = format_id['160'].get('url', None)
+				if(url_dict != format_id['160'].get('manifest_url', None)):
+					process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
+			else: c+=1
+ 
 	except Exception as e: print(e)
+	
+
+def download_frames(url_lists):
+	pool = Pool(os.cpu_count())
+
+	for url_list in url_lists:
+		urls, directory = url_list
+		print(colored(f'--- Downloading {directory} ---', 'green'))
+		start_time = time.time()
+  
+		list(tqdm.tqdm(pool.imap(functools.partial(take_shots_from_url, directory, 3), list(urls.items())), total=len(list(urls.items()))))
+		
+		print(colored(f'--- Download of {directory} took: {time.time() - start_time} seconds ---\n', 'green'))
+
+	pool.close()
+	return c 
 
 
 def get_dataset():
@@ -75,18 +94,24 @@ def get_dataset():
 		os.makedirs(os.path.join('data', 'test_shots', str(id_label)))
 
 	return DATA, LABELS
-	
 
-def download_frames(url_lists):
-	pool = Pool(os.cpu_count())
 
-	for url_list in url_lists:
-		urls, directory = url_list
-		print(colored(f'--- Downloading {directory} ---', 'green'))
-		start_time = time.time()
-  
-		list(tqdm.tqdm(pool.imap(functools.partial(take_shots_from_url, directory, 4), list(urls.items())), total=len(list(urls.items()))))
-		
-		print(colored(f'--- Download of {directory} took: {time.time() - start_time} seconds ---\n', 'green'))
 
-	pool.close()
+'''formats = info_dict.get('formats', None)
+			for f in formats:
+				if f.get('format_note', None) == '144p':
+					url = f.get('url', None)
+					process_video(url, skip_rate, directory, url_id, video_length, labels)
+					break'''
+	 
+
+'''resolution_id = ['160', '133', '134', '135', '136']
+			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
+
+			for res in resolution_id:
+				if res in list(format_id.keys()):
+					video = format_id[res]
+					url_dict = video.get('url', None)
+					if(video.get('url', None) != video.get('manifest_url', None)):
+						process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
+						break'''

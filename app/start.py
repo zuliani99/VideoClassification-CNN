@@ -18,7 +18,8 @@ def main():
 
     train_url_list, test_url_list = DATA
     
-    download_frames([(train_url_list, 'train_shots'), (test_url_list, 'test_shots')])
+    c = download_frames([(train_url_list, 'train_shots'), (test_url_list, 'test_shots')])
+    print(str(c))
     
     
 def blame_directory(folder):
