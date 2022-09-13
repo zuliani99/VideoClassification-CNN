@@ -7,7 +7,6 @@ import time
 import tqdm
 from termcolor import colored
 
-
 c = 0
 
 def process_video(url, skip_frames, directory, url_id, total_frames, labels):
@@ -35,11 +34,13 @@ def process_video(url, skip_frames, directory, url_id, total_frames, labels):
 def take_shots_from_url(directory, percentage_of_frames, video_url):
 	url, labels = video_url
 	url_id = url.split('=')[1]
-		
+
+	global c
 	try:
 		ydl_options = {"quiet": True, 'verbose': False} #, 'format': 'worst'}
 
 		with yt_dlp.YoutubeDL(ydl_options) as ydl:
+			#print(str(c))
 			info_dict = ydl.extract_info(url, download=False)
 
 			video_length = info_dict['duration'] * info_dict['fps']
@@ -51,9 +52,29 @@ def take_shots_from_url(directory, percentage_of_frames, video_url):
 				url_dict = format_id['160'].get('url', None)
 				if(url_dict != format_id['160'].get('manifest_url', None)):
 					process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
-			else: c+=1
+			elif '278' in list(format_id.keys()):
+				url_dict = format_id['278'].get('url', None)
+				if(url_dict != format_id['278'].get('manifest_url', None)):
+					process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
+			else:
+				c+=1
+				print(str(c))
+
+			'''resolution_id = ['160', '278', '133', '242', '234', '134']
+			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
+			for res in resolution_id:
+				if res in list(format_id.keys()):
+					url_dict = format_id[res].get('url', None)
+					print(res, url_id)
+					if(url_dict != format_id[res].get('manifest_url', None)):
+						process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
+						break'''
+			#else: c += 1
  
 	except Exception as e: print(e)
+
+
+		
 	
 
 def download_frames(url_lists):
@@ -69,7 +90,6 @@ def download_frames(url_lists):
 		print(colored(f'--- Download of {directory} took: {time.time() - start_time} seconds ---\n', 'green'))
 
 	pool.close()
-	return c 
 
 
 def get_dataset():
