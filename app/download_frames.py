@@ -7,26 +7,23 @@ import time
 import tqdm
 from termcolor import colored
 
-c = 0
-
-def process_video(url, skip_frames, directory, url_id, total_frames, labels):
+def process_video(url, skip_frames, skip_start_end_frames, directory, url_id, total_frames, labels):
 	cap = cv2.VideoCapture(url)
- 
 	x = 0
-	count = 0
-	
+	count = skip_start_end_frames
+ 
 	while count < total_frames:
-		
+		cap.set(1, count)
 		ret, frame = cap.read()
+  
 		if not ret: break
 
 		for lab in labels:
 			filename = os.path.join('data', directory, str(lab), f'{url_id}_{x}.png')
 			cv2.imwrite(filename.format(count), frame)
-		
+   
 		x += 1
 		count += skip_frames
-		cap.set(1, count)
   
 	cap.release()
 
@@ -34,45 +31,28 @@ def process_video(url, skip_frames, directory, url_id, total_frames, labels):
 def take_shots_from_url(directory, percentage_of_frames, video_url):
 	url, labels = video_url
 	url_id = url.split('=')[1]
-
 	global c
+ 
 	try:
-		ydl_options = {"quiet": True, 'verbose': False} #, 'format': 'worst'}
+		ydl_options = {"quiet": True, 'verbose': False}
 
 		with yt_dlp.YoutubeDL(ydl_options) as ydl:
-			#print(str(c))
 			info_dict = ydl.extract_info(url, download=False)
 
-			video_length = info_dict['duration'] * info_dict['fps']
+			video_length_or = info_dict['duration'] * info_dict['fps']
+			frames_out_perc = (video_length_or * 10) // 100
+			video_length =  video_length_or - (frames_out_perc * 2)
 			tot_stored_frames = min((video_length * percentage_of_frames) // 100, 10)
 			skip_rate = video_length // tot_stored_frames
-			
+
 			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
-			if '160' in list(format_id.keys()):
-				url_dict = format_id['160'].get('url', None)
-				if(url_dict != format_id['160'].get('manifest_url', None)):
-					process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
-			elif '278' in list(format_id.keys()):
+			if '278' in list(format_id.keys()):
 				url_dict = format_id['278'].get('url', None)
 				if(url_dict != format_id['278'].get('manifest_url', None)):
-					process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
-			else:
-				c+=1
-				print(str(c))
+					process_video(url_dict, skip_rate, frames_out_perc, directory, url_id, video_length, labels)
+			else: return
 
-			'''resolution_id = ['160', '278', '133', '242', '234', '134']
-			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
-			for res in resolution_id:
-				if res in list(format_id.keys()):
-					url_dict = format_id[res].get('url', None)
-					print(res, url_id)
-					if(url_dict != format_id[res].get('manifest_url', None)):
-						process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
-						break'''
-			#else: c += 1
- 
 	except Exception as e: print(e)
-
 
 		
 	
@@ -114,24 +94,3 @@ def get_dataset():
 		os.makedirs(os.path.join('data', 'test_shots', str(id_label)))
 
 	return DATA, LABELS
-
-
-
-'''formats = info_dict.get('formats', None)
-			for f in formats:
-				if f.get('format_note', None) == '144p':
-					url = f.get('url', None)
-					process_video(url, skip_rate, directory, url_id, video_length, labels)
-					break'''
-	 
-
-'''resolution_id = ['160', '133', '134', '135', '136']
-			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
-
-			for res in resolution_id:
-				if res in list(format_id.keys()):
-					video = format_id[res]
-					url_dict = video.get('url', None)
-					if(video.get('url', None) != video.get('manifest_url', None)):
-						process_video(url_dict, skip_rate, directory, url_id, video_length, labels)
-						break'''

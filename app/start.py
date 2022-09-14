@@ -3,7 +3,7 @@
 
 import os
 import shutil
-from download_frames import get_dataset, download_frames, c
+from download_frames import get_dataset, download_frames
 
 def main():
     if(not os.path.exists('./data/sports-1m-dataset-master')):
@@ -19,7 +19,6 @@ def main():
     train_url_list, test_url_list = DATA
     
     download_frames([(train_url_list, 'train_shots'), (test_url_list, 'test_shots')])
-    print(str(c))
     
     
 def blame_directory(folder):
