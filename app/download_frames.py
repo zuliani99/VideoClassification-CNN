@@ -19,7 +19,7 @@ def process_video(url, skip_frames, skip_start_end_frames, directory, url_id, to
 		if not ret: break
 
 		for lab in labels:
-			filename = os.path.join('data', directory, str(lab), f'{url_id}_{x}.png')
+			filename = os.path.join('data', directory, lab, f'{url_id}_{x}.png')
 			cv2.imwrite(filename.format(count), frame)
    
 		x += 1
@@ -70,13 +70,17 @@ def download_frames(url_lists):
 		print(colored(f'--- Download of {directory} took: {time.time() - start_time} seconds ---\n', 'green'))
 
 	pool.close()
-
+ 
+def get_label_name(LABEL, id): return LABEL[int(id)]
 
 def get_dataset():
 	TRAIN, TEST = {}, {}
 	DATA = [TRAIN, TEST]
 	LABELS = []
 	path = './data/sports-1m-dataset-master/original'
+ 
+	with open('./data/sports-1m-dataset-master/labels.txt') as f_labels:
+		LABELS = f_labels.read().splitlines()
 
 	for idx, f in enumerate(os.listdir(path)):
 		with open(os.path.join(path, f)) as f_txt:
@@ -84,13 +88,10 @@ def get_dataset():
 			for line in lines:
 				splitted_line = line.split(' ')
 				label_indices = splitted_line[1].rstrip('\n').split(',') 
-				DATA[idx][splitted_line[0]] = list(map(int, label_indices))
+				DATA[idx][splitted_line[0]] = list(map(functools.partial(get_label_name, LABELS), label_indices))
 
-	with open('./data/sports-1m-dataset-master/labels.txt') as f_labels:
-		LABELS = f_labels.read().splitlines()
-
-	for id_label in range(len(LABELS) + 1):
-		os.makedirs(os.path.join('data', 'train_shots', str(id_label)))
-		os.makedirs(os.path.join('data', 'test_shots', str(id_label)))
+	for label in LABELS:
+		os.makedirs(os.path.join('data', 'train_shots', label))
+		os.makedirs(os.path.join('data', 'test_shots', label))
 
 	return DATA, LABELS
