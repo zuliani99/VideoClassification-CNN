@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 import os
 import shutil
 from download_frames import get_dataset, download_frames
+
 
 def main():
     if(not os.path.exists('./data/sports-1m-dataset-master')):
@@ -15,9 +17,7 @@ def main():
         os.system("rm master.zip")
     
     DATA, LABELS = get_dataset()
-
     train_url_list, test_url_list = DATA
-    
     download_frames([(train_url_list, 'train_shots'), (test_url_list, 'test_shots')])
     
     
@@ -31,6 +31,7 @@ def blame_directory(folder):
                 shutil.rmtree(file_path)
         except Exception as e:
             print(f'Failed to delete {file_path}. Reason: {e}')
+
 
 if __name__ == "__main__":
     try:

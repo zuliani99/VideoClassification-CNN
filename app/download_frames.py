@@ -31,10 +31,9 @@ def process_video(url, skip_frames, skip_start_end_frames, directory, url_id, to
 def take_shots_from_url(directory, percentage_of_frames, video_url):
 	url, labels = video_url
 	url_id = url.split('=')[1]
-	global c
  
 	try:
-		ydl_options = {"quiet": True, 'verbose': False}
+		ydl_options = {"quiet": True, 'verbose': False, 'youtube_include_dash_manifest': False}
 
 		with yt_dlp.YoutubeDL(ydl_options) as ydl:
 			info_dict = ydl.extract_info(url, download=False)
@@ -42,16 +41,13 @@ def take_shots_from_url(directory, percentage_of_frames, video_url):
 			video_length_or = info_dict['duration'] * info_dict['fps']
 			frames_out_perc = (video_length_or * 10) // 100
 			video_length =  video_length_or - (frames_out_perc * 2)
-			tot_stored_frames = min((video_length * percentage_of_frames) // 100, 10)
-			skip_rate = video_length // tot_stored_frames
+			skip_rate = video_length // min((video_length * percentage_of_frames) // 100, 10) # max 10 frames per video
 
 			format_id = {f['format_id']: f for f in info_dict.get('formats', None)}
-			if '278' in list(format_id.keys()):
-				url_dict = format_id['278'].get('url', None)
-				if(url_dict != format_id['278'].get('manifest_url', None)):
-					process_video(url_dict, skip_rate, frames_out_perc, directory, url_id, video_length, labels)
-			else: return
-
+			if '160' in list(format_id.keys()):
+				print(colored(f'Obtaining frames of: {url_id}, with labels: {labels}', 'cyan'))
+				process_video(format_id['160'].get('url', None), skip_rate, frames_out_perc, directory, url_id, video_length, labels)
+    
 	except Exception as e: print(e)
 
 		
@@ -64,14 +60,13 @@ def download_frames(url_lists):
 		urls, directory = url_list
 		print(colored(f'--- Downloading {directory} ---', 'green'))
 		start_time = time.time()
-  
 		list(tqdm.tqdm(pool.imap(functools.partial(take_shots_from_url, directory, 3), list(urls.items())), total=len(list(urls.items()))))
-		
 		print(colored(f'--- Download of {directory} took: {time.time() - start_time} seconds ---\n', 'green'))
-
 	pool.close()
  
+ 
 def get_label_name(LABEL, id): return LABEL[int(id)]
+
 
 def get_dataset():
 	TRAIN, TEST = {}, {}
