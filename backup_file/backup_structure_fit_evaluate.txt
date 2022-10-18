@@ -1,0 +1,258 @@
+'''def train_step(model: torch.nn.Module, data_loader: torch.utils.data.DataLoader,
+               loss_fn: torch.nn.Module, optimizer: torch.optim.Optimizer,
+               accuracy_fn, device: torch.device = device):
+    train_loss, train_acc = 0, 0
+    for batch, (X, y) in enumerate(data_loader):
+        # Send data to GPU
+        X, y = X.to(device), y.to(device)
+
+        # 1. Forward pass
+        y_pred = model(X)
+
+        # 2. Calculate loss
+        loss = loss_fn(y_pred, y)
+        train_loss += loss
+        train_acc += accuracy_fn(y_true=y, y_pred=y_pred.argmax(dim=1)) # Go from logits -> pred labels
+
+        # 3. Optimizer zero grad
+        optimizer.zero_grad()
+
+        # 4. Loss backward
+        loss.backward()
+
+        # 5. Optimizer step
+        optimizer.step()
+
+    # Calculate loss and accuracy per epoch and print out what's happening
+    train_loss /= len(data_loader)
+    train_acc /= len(data_loader)
+    print(f"Train loss: {train_loss:.5f} | Train accuracy: {train_acc:.2f}%")
+
+def test_step(data_loader: torch.utils.data.DataLoader, model: torch.nn.Module,
+              loss_fn: torch.nn.Module, accuracy_fn, device: torch.device = device):
+    test_loss, test_acc = 0, 0
+    model.eval() # put model in eval mode
+    # Turn on inference context manager
+    with torch.inference_mode(): 
+        for X, y in data_loader:
+            # Send data to GPU
+            X, y = X.to(device), y.to(device)
+            
+            # 1. Forward pass
+            test_pred = model(X)
+            
+            # 2. Calculate loss and accuracy
+            test_loss += loss_fn(test_pred, y)
+            test_acc += accuracy_fn(y_true=y,
+                y_pred=test_pred.argmax(dim=1) # Go from logits -> pred labels
+            )
+        
+        # Adjust metrics and print out
+        test_loss /= len(data_loader)
+        test_acc /= len(data_loader)
+        print(f"Test loss: {test_loss:.5f} | Test accuracy: {test_acc:.2f}%\n")'''
+
+
+'''def eval_model(model: torch.nn.Module, 
+               data_loader: torch.utils.data.DataLoader, 
+               loss_fn: torch.nn.Module, 
+               accuracy_fn, 
+               device: torch.device = device):
+    """Evaluates a given model on a given dataset.
+
+    Args:
+        model (torch.nn.Module): A PyTorch model capable of making predictions on data_loader.
+        data_loader (torch.utils.data.DataLoader): The target dataset to predict on.
+        loss_fn (torch.nn.Module): The loss function of model.
+        accuracy_fn: An accuracy function to compare the models predictions to the truth labels.
+        device (str, optional): Target device to compute on. Defaults to device.
+
+    Returns:
+        (dict): Results of model making predictions on data_loader.
+    """
+    loss, acc = 0, 0
+    model.eval()
+    with torch.inference_mode():
+        for X, y in data_loader:
+            # Send data to the target device
+            X, y = X.to(device), y.to(device)
+            y_pred = model(X)
+            loss += loss_fn(y_pred, y)
+            acc += accuracy_fn(y_true=y, y_pred=y_pred.argmax(dim=1))
+        
+        # Scale loss and acc
+        loss /= len(data_loader)
+        acc /= len(data_loader)
+        
+    return {"model_name": model.__class__.__name__, # only works when model was created with a class
+            "model_loss": loss.item(),
+            "model_acc": acc}'''
+
+'''# 1. Take in various parameters required for training and test steps
+def fit_evaluate(model: torch.nn.Module, train_dataloader: torch.utils.data.DataLoader, 
+          val_dataloader: torch.utils.data.DataLoader,
+          test_dataloader: torch.utils.data.DataLoader, optimizer: torch.optim.Optimizer,
+          loss_fn: torch.nn.Module = nn.CrossEntropyLoss(), epochs: int = 5):
+    
+    # 2. Create empty results dictionary
+    results = {"train_loss": [],
+        "train_acc": [],
+        "test_loss": [],
+        "test_acc": []
+    }
+    
+    # 3. Loop through training and testing steps for a number of epochs
+    for epoch in tqdm(range(epochs)):
+        train_loss, train_acc = train_step(model=model,
+                                           dataloader=train_dataloader,
+                                           loss_fn=loss_fn,
+                                           optimizer=optimizer)
+        test_loss, test_acc = test_step(model=model,
+            dataloader=test_dataloader,
+            loss_fn=loss_fn)
+        
+        # 4. Print out what's happening
+        print(
+            f"Epoch: {epoch+1} | "
+            f"train_loss: {train_loss:.4f} | "
+            f"train_acc: {train_acc:.4f} | "
+            f"test_loss: {test_loss:.4f} | "
+            f"test_acc: {test_acc:.4f}"
+        )
+
+        # 5. Update results dictionary
+        results["train_loss"].append(train_loss)
+        results["train_acc"].append(train_acc)
+        results["test_loss"].append(test_loss)
+        results["test_acc"].append(test_acc)
+
+    # 6. Return the filled results at the end of the epochs
+    return results'''
+
+'''def training_step(self, images, labels):
+  out = self(images)                  # Generate predictions
+  loss = F.cross_entropy(out, labels) # Calculate loss
+  return loss
+    
+def validation_step(self, images, labels):
+  out = self(images)                    # Generate predictions
+  loss = F.cross_entropy(out, labels)   # Calculate loss
+  acc = accuracy(out, labels)           # Calculate accuracy
+  return {'val_loss': loss.detach(), 'val_acc': acc}
+        
+def validation_epoch_end(self, outputs):
+  batch_losses = [x['val_loss'] for x in outputs]
+  epoch_loss = torch.stack(batch_losses).mean()   # Combine losses      stack -> combine multiple tensors in a single one
+  batch_accs = [x['val_acc'] for x in outputs]
+  epoch_acc = torch.stack(batch_accs).mean()      # Combine accuracies
+  return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()} # .item() retrun the single value of the tensor
+    
+def epoch_end(self, epoch, result):
+  print("Epoch [{}], train_loss: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f} \n".format(
+    epoch + 1, result['train_loss'], result['val_loss'], result['val_acc']))'''
+
+'''class CNN_Architecture():
+
+  def __init__(self, model: torch.nn.Module, train_dataloader: torch.utils.data.DataLoader, 
+    val_dataloader: torch.utils.data.DataLoader, optimizer: torch.optim.Optimizer,
+    loss_fn: torch.nn.Module, accuracy_fn, device: torch.device):
+
+    self.model = model
+    self.optimizer = optimizer
+    self.train_dataloader = train_dataloader
+    self.loss_fn = loss_fn
+    self.val_dataloader = val_dataloader
+    self.accuracy_fn = accuracy_fn
+    self.device = device
+  
+
+  def evaluate(self, val_dataloader: torch.utils.data.DataLoader):
+    val_loss, val_acc = 0, 0
+    #outputs = []
+    self.model.eval()
+
+    pbar = tqdm(val_dataloader, total = len(val_dataloader), desc='EVALUATION')
+
+    with torch.inference_mode():
+      for X, y in pbar:
+        X, y = X.to(self.device), y.to(self.device)
+        y_pred = self.model(X)
+        val_loss += self.loss_fn(y_pred, y)
+        val_acc += self.accuracy_fn(y_pred, y)
+       #outputs.append({
+       #     'val_loss': self.loss_fn(y_pred, y).detach(),
+       #     'val_acc': self.accuracy_fn(y_pred, y)
+       #})
+        
+        
+        # Scale loss and acc
+      val_loss /= len(val_dataloader) # already calculate the mean of all loss
+      val_acc /= len(val_dataloader) # already calculate the mean of all accuracy
+
+    return { #"model_name": self.model.__class__.__name__, # only works when model was created with a class
+            "model_loss": val_loss.item(),
+            "model_acc": val_acc.item() }
+    #batch_losses = [x['val_loss'] for x in outputs]
+    #epoch_loss = torch.stack(batch_losses).mean()   # Combine losses      stack -> combine multiple tensors in a single one
+    #batch_accs = [x['val_acc'] for x in outputs]
+    #epoch_acc = torch.stack(batch_accs).mean()      # Combine accuracies
+    
+    #return {'val_loss': epoch_loss.item(), 'val_acc': epoch_acc.item()}
+
+
+
+  def fit(self, epochs: int):
+    results = { "train_loss": [], "train_acc": [], "val_loss": [], "val_acc": [] }
+    #history = []
+
+    for epoch in range(epochs):
+      #train_loss_vec, train_acc_vec = [], []
+      train_loss, train_acc = 0, 0
+
+      # Training phase
+      self.model.train()
+
+      pbar = tqdm(self.train_dataloader, total = len(self.train_dataloader), desc='TRAIN')
+
+      for image, label in pbar:
+        self.optimizer.zero_grad()
+        image, label = image.to(self.device), label.to(self.device)
+        
+        output = self.model(image)
+        loss = self.loss_fn(output, label)
+        #print('loss', loss)
+        loss.backward()
+        self.optimizer.step()
+
+        #train_loss_vec.append(loss)
+        train_loss += loss.item()
+
+        acc = self.accuracy_fn(output, label).item() # Go from logits -> pred labels
+        #print('acc', acc)
+        #train_acc_vec.append(acc)
+        train_acc += acc
+
+      train_loss /= len(self.train_dataloader)
+      train_acc /= len(self.train_dataloader)
+
+
+      # Validation phase
+      val_loss, val_acc = (self.evaluate(self.val_dataloader)).values()
+      #result = self.evaluate(self.val_dataloader)
+
+
+      results["train_loss"].append(train_loss)
+      results["train_acc"].append(train_acc)
+      results["val_loss"].append(val_loss)
+      results["val_acc"].append(val_acc)
+
+      #result['train_loss'] = torch.stack(train_loss_vec).mean().item()
+      #result['train_acc'] = torch.stack(train_acc_vec).mean().item()
+
+      print("Epoch [{}], train_loss: {:.4f}, train_acc: {:.4f}, val_loss: {:.4f}, val_acc: {:.4f} \n".format(
+            epoch + 1, train_loss, train_acc, val_loss, val_acc))
+            #epoch + 1, result['train_loss'], result['train_acc'], result['val_loss'], result['val_acc']))
+      
+      #history.append(result)
+
+    return history'''

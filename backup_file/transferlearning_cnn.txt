@@ -1,0 +1,70 @@
+Now we try to generalize a pretrained model to out problem using transfer learning
+
+
+# Get a set of pretrained model weights
+weights = torchvision.models.AlexNet_Weights.DEFAULT # .DEFAULT = best available weights from pretraining on ImageNet
+print(weights)
+
+# Get the transforms used to create our pretrained weights
+auto_transforms = weights.transforms()
+print(auto_transforms)
+
+
+# Create training and testing DataLoaders
+btr_dl, bte_ld = return_basic_dataloader(train_dir, test_dir)
+
+train_data = datasets.ImageFolder(root=train_dir, transform=auto_transforms)
+test_data = datasets.ImageFolder(root=test_dir, transform=auto_transforms)
+
+train_dl, val_dl, test_dl = generate_dataloaders(train_data, test_data)
+
+
+model_alexnet = torchvision.models.alexnet(weights=weights).to(device)
+for param in model_alexnet.features.parameters():
+  param.requires_grad = False
+
+output_shape = len(class_names)
+
+# Recreate the classifier layer and seed it to the target device
+model_alexnet.classifier = torch.nn.Sequential(
+  torch.nn.Dropout(p=0.5, inplace=True), 
+  torch.nn.Linear(in_features=1280, 
+                    out_features=output_shape, # same number of output units as our number of classes
+                    bias=True)).to(device)
+
+
+loss_fn = nn.CrossEntropyLoss()
+optimizer = torch.optim.Adam(params = vgg_net.parameters(), lr = 0.001, weight_decay=1e-3)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=5, verbose=False)
+
+cnn_model_alexnet = CNN_Architecture(model = model_alexnet, 
+             train_dataloader = train_dl,
+             val_dataloader = val_dl,
+             optimizer = optimizer,
+             loss_fn = loss_fn,
+             accuracy_fn = accuracy,
+             scheduler = scheduler,
+             device = device)
+
+
+overfit_batch(model_alexnet, train_dl, loss_fn, optimizer, scheduler)
+
+
+# Train model
+start_time = timer()
+history_alexnet = cnn_model_alexnet.fit(NUM_EPOCHS+150)
+end_time = timer()
+
+print(f'Total training time: {end_time-start_time:.3f} seconds')
+
+
+plot_loss_curves(history_alexnet)
+
+
+# Evaluate model
+start_time = timer()
+result_efficientnet_b0 = cnn_model_alexnet.evaluate(test_dl)
+end_time = timer()
+
+print(f'Total evaluation time: {end_time-start_time:.3f} seconds\n')
+print(f"TEST Results for {result_efficientnet_b0['model_name']} -> loss: {result_efficientnet_b0['model_loss']} accuracy: {result_efficientnet_b0['model_acc']}")
