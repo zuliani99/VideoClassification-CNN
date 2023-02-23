@@ -1,4 +1,0 @@
-opencv-python
-tqdm
-termcolor
-yt-dlp
