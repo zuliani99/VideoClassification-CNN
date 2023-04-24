@@ -1,0 +1,625 @@
+Epoch [1], train_loss: 2.128000, train_accuracy: 0.189449, val_loss: 2.106841, val_accuracy: 0.189989 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [2], train_loss: 2.092918, train_accuracy: 0.187152, val_loss: 2.093713, val_accuracy: 0.172290 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [3], train_loss: 2.085733, train_accuracy: 0.187291, val_loss: 2.090053, val_accuracy: 0.197179 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [4], train_loss: 2.081325, train_accuracy: 0.190423, val_loss: 2.082925, val_accuracy: 0.200498 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [5], train_loss: 2.068222, train_accuracy: 0.195434, val_loss: 2.040407, val_accuracy: 0.264381 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [6], train_loss: 1.895311, train_accuracy: 0.298580, val_loss: 1.816519, val_accuracy: 0.313606 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [7], train_loss: 1.792302, train_accuracy: 0.341175, val_loss: 1.762633, val_accuracy: 0.348175 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+MultiResCNN TRAIN Epoch [8 / 80]: 96%
+430/449 [01:12<00:03, 5.09it/s, accuracy=0.406, loss=1.84]
+  0%|          | 0/113 [00:00<?, ?it/s]
+Epoch [8], train_loss: 1.738065, train_accuracy: 0.362611, val_loss: 1.740732, val_accuracy: 0.344580 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+  0%|          | 0/449 [00:00<?, ?it/s]
+Epoch [9], train_loss: 1.705931, train_accuracy: 0.373330, val_loss: 1.687673, val_accuracy: 0.372788 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [10], train_loss: 1.674064, train_accuracy: 0.382865, val_loss: 1.655462, val_accuracy: 0.387445 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [11], train_loss: 1.644137, train_accuracy: 0.396715, val_loss: 1.643389, val_accuracy: 0.389104 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [12], train_loss: 1.612881, train_accuracy: 0.409312, val_loss: 1.716388, val_accuracy: 0.342091 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [13], train_loss: 1.590515, train_accuracy: 0.414463, val_loss: 1.686670, val_accuracy: 0.363938 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [14], train_loss: 1.561607, train_accuracy: 0.422467, val_loss: 1.572146, val_accuracy: 0.419248 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [15], train_loss: 1.545467, train_accuracy: 0.432280, val_loss: 1.497829, val_accuracy: 0.446626 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [16], train_loss: 1.510577, train_accuracy: 0.454552, val_loss: 1.525510, val_accuracy: 0.449392 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [17], train_loss: 1.475739, train_accuracy: 0.469237, val_loss: 1.540160, val_accuracy: 0.449945 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [18], train_loss: 1.425722, train_accuracy: 0.494223, val_loss: 1.405416, val_accuracy: 0.514934 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [19], train_loss: 1.393928, train_accuracy: 0.510301, val_loss: 1.466182, val_accuracy: 0.471239 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [20], train_loss: 1.361613, train_accuracy: 0.523594, val_loss: 1.370286, val_accuracy: 0.525996 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [21], train_loss: 1.329917, train_accuracy: 0.537932, val_loss: 1.306074, val_accuracy: 0.540100 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [22], train_loss: 1.296610, train_accuracy: 0.550320, val_loss: 1.293124, val_accuracy: 0.555310 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [23], train_loss: 1.262802, train_accuracy: 0.564797, val_loss: 1.273577, val_accuracy: 0.561117 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [24], train_loss: 1.241276, train_accuracy: 0.570713, val_loss: 1.285072, val_accuracy: 0.551991 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [25], train_loss: 1.222073, train_accuracy: 0.578299, val_loss: 1.326766, val_accuracy: 0.545077 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [26], train_loss: 1.184869, train_accuracy: 0.593332, val_loss: 1.232191, val_accuracy: 0.573838 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [27], train_loss: 1.166623, train_accuracy: 0.599527, val_loss: 1.158151, val_accuracy: 0.600664 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [28], train_loss: 1.138533, train_accuracy: 0.609410, val_loss: 1.137443, val_accuracy: 0.612279 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [29], train_loss: 1.105703, train_accuracy: 0.618597, val_loss: 1.099616, val_accuracy: 0.624447 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [30], train_loss: 1.078246, train_accuracy: 0.631403, val_loss: 1.120551, val_accuracy: 0.607854 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [31], train_loss: 1.055617, train_accuracy: 0.643513, val_loss: 1.129466, val_accuracy: 0.614491 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [32], train_loss: 1.022636, train_accuracy: 0.653605, val_loss: 1.100843, val_accuracy: 0.630808 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [33], train_loss: 1.003214, train_accuracy: 0.660774, val_loss: 1.045130, val_accuracy: 0.644912 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [34], train_loss: 0.978785, train_accuracy: 0.667873, val_loss: 1.019836, val_accuracy: 0.655973 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [35], train_loss: 0.959038, train_accuracy: 0.675738, val_loss: 1.046496, val_accuracy: 0.647124 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [36], train_loss: 0.937183, train_accuracy: 0.685342, val_loss: 1.044870, val_accuracy: 0.647677 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [37], train_loss: 0.917168, train_accuracy: 0.690841, val_loss: 1.057796, val_accuracy: 0.650442 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [38], train_loss: 0.892934, train_accuracy: 0.701211, val_loss: 1.033990, val_accuracy: 0.648783 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [39], train_loss: 0.880999, train_accuracy: 0.704969, val_loss: 0.948254, val_accuracy: 0.689712 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [40], train_loss: 0.859211, train_accuracy: 0.710885, val_loss: 1.022019, val_accuracy: 0.657909 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [41], train_loss: 0.834744, train_accuracy: 0.720212, val_loss: 0.974397, val_accuracy: 0.688330 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [42], train_loss: 0.810011, train_accuracy: 0.725432, val_loss: 1.050010, val_accuracy: 0.669524 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [43], train_loss: 0.787590, train_accuracy: 0.738307, val_loss: 0.968531, val_accuracy: 0.689712 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [44], train_loss: 0.764290, train_accuracy: 0.747216, val_loss: 1.030239, val_accuracy: 0.671737 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [45], train_loss: 0.742072, train_accuracy: 0.756194, val_loss: 1.005325, val_accuracy: 0.692754 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [46], train_loss: 0.719528, train_accuracy: 0.762458, val_loss: 1.143009, val_accuracy: 0.647954 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [47], train_loss: 0.701319, train_accuracy: 0.766147, val_loss: 0.991184, val_accuracy: 0.687777 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [48], train_loss: 0.687394, train_accuracy: 0.773037, val_loss: 0.960874, val_accuracy: 0.698285 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [49], train_loss: 0.654319, train_accuracy: 0.783129, val_loss: 0.943926, val_accuracy: 0.708241 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [50], train_loss: 0.644430, train_accuracy: 0.786957, val_loss: 1.048024, val_accuracy: 0.680033 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [51], train_loss: 0.632797, train_accuracy: 0.793639, val_loss: 1.020612, val_accuracy: 0.688330 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [52], train_loss: 0.605330, train_accuracy: 0.804148, val_loss: 0.974424, val_accuracy: 0.701327 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [53], train_loss: 0.580034, train_accuracy: 0.811665, val_loss: 1.006997, val_accuracy: 0.694690 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [54], train_loss: 0.589358, train_accuracy: 0.803800, val_loss: 1.070233, val_accuracy: 0.686947 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [55], train_loss: 0.556103, train_accuracy: 0.816954, val_loss: 0.981395, val_accuracy: 0.711836 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [56], train_loss: 0.527203, train_accuracy: 0.828438, val_loss: 0.946802, val_accuracy: 0.704369 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [57], train_loss: 0.527815, train_accuracy: 0.826211, val_loss: 1.066154, val_accuracy: 0.690819 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [58], train_loss: 0.494484, train_accuracy: 0.837556, val_loss: 0.968703, val_accuracy: 0.715985 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [59], train_loss: 0.477052, train_accuracy: 0.842845, val_loss: 1.058584, val_accuracy: 0.697179 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [60], train_loss: 0.462190, train_accuracy: 0.847508, val_loss: 1.101838, val_accuracy: 0.719027 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [61], train_loss: 0.440222, train_accuracy: 0.858575, val_loss: 1.041938, val_accuracy: 0.707965 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [62], train_loss: 0.482917, train_accuracy: 0.841453, val_loss: 1.024603, val_accuracy: 0.706582 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [63], train_loss: 0.432668, train_accuracy: 0.857809, val_loss: 1.072517, val_accuracy: 0.713496 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [64], train_loss: 0.408748, train_accuracy: 0.861915, val_loss: 1.104805, val_accuracy: 0.711283 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [65], train_loss: 0.389736, train_accuracy: 0.871450, val_loss: 1.037339, val_accuracy: 0.696073 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [66], train_loss: 0.364322, train_accuracy: 0.876114, val_loss: 1.237079, val_accuracy: 0.700498 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [67], train_loss: 0.363751, train_accuracy: 0.876531, val_loss: 1.193607, val_accuracy: 0.706858 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [68], train_loss: 0.351392, train_accuracy: 0.882865, val_loss: 1.084874, val_accuracy: 0.714049 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [69], train_loss: 0.333443, train_accuracy: 0.892121, val_loss: 1.163399, val_accuracy: 0.710730 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [70], train_loss: 0.321144, train_accuracy: 0.893513, val_loss: 1.247119, val_accuracy: 0.706858 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [71], train_loss: 0.307008, train_accuracy: 0.897341, val_loss: 1.171350, val_accuracy: 0.710454 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [72], train_loss: 0.301838, train_accuracy: 0.899151, val_loss: 1.244734, val_accuracy: 0.701051 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [73], train_loss: 0.287100, train_accuracy: 0.903744, val_loss: 1.215214, val_accuracy: 0.722345 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [74], train_loss: 0.284196, train_accuracy: 0.904092, val_loss: 1.297383, val_accuracy: 0.712942 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [75], train_loss: 0.284191, train_accuracy: 0.904023, val_loss: 1.208508, val_accuracy: 0.719027 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [76], train_loss: 0.253601, train_accuracy: 0.914045, val_loss: 1.321276, val_accuracy: 0.706858 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [77], train_loss: 0.243557, train_accuracy: 0.918291, val_loss: 1.212855, val_accuracy: 0.712113 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [78], train_loss: 0.232090, train_accuracy: 0.920727, val_loss: 1.400746, val_accuracy: 0.686947 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [79], train_loss: 0.236007, train_accuracy: 0.922745, val_loss: 1.267206, val_accuracy: 0.723728 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Epoch [80], train_loss: 0.212156, train_accuracy: 0.926991, val_loss: 1.427715, val_accuracy: 0.715155 
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+=> Saving Checkpoint to multiclass
+ DONE
+
+Total training time: 7550.743 seconds
+
+Total evaluation time: 15.820 seconds
+
+TEST Results for MultiResCNN -> loss: 1.745229377049649 accuracy-score: 0.6706782117790662
