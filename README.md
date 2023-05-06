@@ -1,6 +1,20 @@
 # VideoClassification-CNN
 Lite version of the following Oxford project: Large-scale Video Classification with Convolutional Neural Networks
 
+## Choose Sport Labels
+|Label ID           |Label Name|
+|-------------------|----------|
+|398|rugby|
+|300|formula racing|
+|361|beach volleyball|
+|368|basketball|
+|415|karate|
+|277|motocross|
+|111|kitesurfing|
+|269|motorcycle racing|
+|258|horse racing|
+|200|bodybuilding|
+
 # Results
 * **Single Frame**![](multiclass_results/singleframe.png)
 * **Single Frame Context**![](multiclass_results/singleframe_context.png)
