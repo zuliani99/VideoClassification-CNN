@@ -1,5 +1,5 @@
 # VideoClassification-CNN
-Lite version of the following Oxford project: Large-scale Video Classification with Convolutional Neural Networks
+Lite version of the following Oxford project: [Large-scale Video Classification with Convolutional Neural Networks](https://cs.stanford.edu/people/karpathy/deepvideo/deepvideo_cvpr2014.pdf)
 
 ## Choosen Sport Labels
 |Label ID           |Label Name|
