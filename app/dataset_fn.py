@@ -3,8 +3,6 @@ from PIL import Image
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader, random_split
 
-BATCH_SIZE = 32 # Number of bags of shots in a batch
-NUM_WORKERS = 4 # Number of workers to use for the dataloaders
 
 train_transform = transforms.Compose([
     #transforms.Resize((178, 178)), # ---> VEDO SE METTENDO QUESTO E TOGLIENDO DAL DPWNOAD IL RESIZE L'IMMAGINE MGLIORA
@@ -40,24 +38,28 @@ class VideoDataset(Dataset):
         shots = self.df.iloc[index, -1] # Get the number of frames of a bag of shots
         # Each bag is half second frames
 
+        images = None
         if self.t == 'single':
             # I want only the central frame
             images = self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot{shots//2}.png'))
 
-        if self.t == 'early':
+        elif self.t == 'early':
             # I want the 5 middle frames
             images = np.array([self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot{idx}.png')).numpy() for idx in range((shots//2)-2,(shots//2)+3)])
         
-        if self.t == 'late':
+        elif self.t == 'late':
             # I want the first and last frames
-            images = np.array([self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot0.png')).numpy(), self.transform(Image.open(f'{dataset_path}/{images_path}/shot{shots-1}.png')).numpy()])
+            images = np.array([self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot0.png')).numpy(), self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot{shots-1}.png')).numpy()])
         
-        if self.t == 'slow':
+        elif self.t == 'slow':
             # I want the 10 middle frames
             if shots%10 == 0:
                 images = np.array([self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot{idx}.png')).numpy() for idx in range((shots//2) - 5, (shots//2) + 5)])
             else:
                 images = np.array([self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot{idx}.png')).numpy() for idx in range((shots%10) - (shots%10)//2, shots-(shots%10)//2)])
+        else:
+            # Default to single frame if t is not recognized
+            images = self.transform(Image.open(f'{self.dataset_path}/{images_path}/shot{shots//2}.png'))
 
         y_label = torch.tensor(np.where(self.df.iloc[index, 1:-1].to_numpy().astype(float) == 1.)[0][0]) # tensor with the corresponding label index (from 0 to 9)
 
@@ -87,7 +89,7 @@ def spit_train(train_data, perc_val_size):
     return random_split(train_data, [int(train_size), int(val_size)]) #train_data, val_data 
 
 
-def generate_dataloaders(train_data, val_data, test_data, batch_size=BATCH_SIZE, num_workers=NUM_WORKERS):
+def generate_dataloaders(train_data, val_data, test_data, batch_size, num_workers) -> tuple[DataLoader, DataLoader, DataLoader]:
     '''
     PORPOUSE:
       Generate the train vaiadtion and test dataloaders
@@ -112,7 +114,7 @@ def generate_dataloaders(train_data, val_data, test_data, batch_size=BATCH_SIZE,
 
 
 
-def get_torch_Dataloader(train_df, test_df, dataset_path):
+def get_torch_Dataloader(train_df, test_df, dataset_path, args):
     # Let's set the validations set to the 20% of the train dataset
 
     # Dataset for Single Frame
@@ -131,10 +133,10 @@ def get_torch_Dataloader(train_df, test_df, dataset_path):
     train_data_slow, val_data_slow = spit_train(VideoDataset(df=train_df, dataset_path=dataset_path, transform=train_transform, t='slow'), 20)
     test_data_slow = VideoDataset(df=test_df, dataset_path=dataset_path, transform=test_transform, t='slow')
 
-    train_dl_single, val_dl_single, test_dl_single = generate_dataloaders(train_data_single, val_data_single, test_data_single)
-    train_dl_late, val_dl_late, test_dl_late = generate_dataloaders(train_data_late, val_data_late, test_data_late)
-    train_dl_early, val_dl_early, test_dl_early = generate_dataloaders(train_data_early, val_data_early, test_data_early)
-    train_dl_slow, val_dl_slow, test_dl_slow = generate_dataloaders(train_data_slow, val_data_slow, test_data_slow)
+    train_dl_single, val_dl_single, test_dl_single = generate_dataloaders(train_data_single, val_data_single, test_data_single, args.batch_size, args.num_workers)
+    train_dl_late, val_dl_late, test_dl_late = generate_dataloaders(train_data_late, val_data_late, test_data_late, args.batch_size, args.num_workers)
+    train_dl_early, val_dl_early, test_dl_early = generate_dataloaders(train_data_early, val_data_early, test_data_early, args.batch_size, args.num_workers)
+    train_dl_slow, val_dl_slow, test_dl_slow = generate_dataloaders(train_data_slow, val_data_slow, test_data_slow, args.batch_size, args.num_workers)
     
     single = { 'train': train_dl_single, 'val': val_dl_single, 'test': test_dl_single }
     early = { 'train': train_dl_early, 'val': val_dl_early, 'test': test_dl_early }

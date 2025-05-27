@@ -1,10 +1,8 @@
 import torch
 import random
-import timer
+import time
 import numpy as np
 import matplotlib.pyplot as plt
-from torch.utils.data import random_split
-from torchvision import transforms
 from torch.backends import cudnn
 
 import logging
@@ -102,7 +100,7 @@ def plot_loss_curves(results_info, path: str):
 
 
 
-def train_evaluate(model, test, exp_path, epochs=80):
+def train_evaluate(model, test, exp_path, epochs):
     '''
     PORPOUSE:
       Perform the training and evaluation plotting the results
@@ -123,10 +121,10 @@ def train_evaluate(model, test, exp_path, epochs=80):
 
     plot_loss_curves(history, exp_path) # Compare the results between train and validation set
 
-    start_time = timer()
+    start_time = time.time()
     result = model.evaluate(test) # Evaluate the model in the Tran dataloader
     # It returns -> {'model_name': model_name, 'model_loss': val_loss.item(), 'model_accuracy': val_accuracy.item()}
-    end_time = timer()
+    end_time = time.time()
     testing_time = (end_time - start_time) / 60
 
 

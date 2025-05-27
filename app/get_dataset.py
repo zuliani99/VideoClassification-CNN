@@ -136,7 +136,9 @@ def video_to_frames(args: argparse.Namespace, dataset_path: str, video_url: str,
             formats = info_dict.get('formats', None)
 
             format_id = {}
-            for f in formats: format_id[f['format_id']] = f
+            if formats is not None:
+                for f in formats:
+                    format_id[f['format_id']] = f
 
             # I only consider the format_id 160 with indicates the 144p resolution
             if '160' in list(format_id.keys()): 
@@ -196,7 +198,7 @@ def video_to_frames(args: argparse.Namespace, dataset_path: str, video_url: str,
         return ret_dictionary
 
 
-def get_inital_path(args: argparse.Namespace) -> str:
+def get_inital_path(args: argparse.Namespace) -> tuple[str, str]:
     '''
     PURPOSE:
       Get the initial path of the dataset
@@ -221,9 +223,7 @@ def get_dataset(args: argparse.Namespace) -> None:
         download_zip_file(
             url='https://github.com/gtoderici/sports-1m-dataset/archive/refs/heads/master.zip',
             zip_f_name=os.path.join(initial_ds_path, 'sports-1m-dataset-master.zip')
-        )
-    else: shutil.rmtree(path)  # Remove the existing directory if it exists
-    
+        )    
 
     
     # Populate the DATA dictionary by reading the train and test files
@@ -267,20 +267,22 @@ def get_dataset(args: argparse.Namespace) -> None:
                 for future in futures:
                     if len(future.result()) > 0: # In case the result of the featue is not empty
                         train_dict.update(future.result()) # Append the result to the final dictionaty
-                        count += 1
         
 
 
     # Save train_dict and test_dict as parquet files using a for loop
     for split_name, data_dict in [('train', train_dict), ('test', test_dict)]:
         df = pd.DataFrame.from_dict(data_dict, orient='index', dtype=int).reset_index(level=0)
-        col_map = {idx: list(LABELS.keys())[idx] for idx in df.columns[1:-1]}
-        col_map[10] = 'shots'
+        col_map = {df.columns[idx]: list(LABELS.keys())[idx - 1] for idx in range(1, len(df.columns) - 1)}
+        col_map["10"] = 'shots'
         df = df.rename(columns=col_map)
         df.columns = df.columns.astype(str)
-        df.to_parquet(f'{dataset_path}/{split_name}.parquet', index=True)
+        split_dataset_path = os.path.join(our_dataset_folder, split_name)
+        if not os.path.exists(split_dataset_path):
+            os.makedirs(split_dataset_path)
+        df.to_parquet(f'{split_dataset_path}/{split_name}.parquet', index=True)
 
-    with open(f'{dataset_path}/labels.csv', 'w') as f: # Writing a csv file for the labels
+    with open(f'{our_dataset_folder}/labels.csv', 'w') as f: # Writing a csv file for the labels
         for key in LABELS.keys():
             f.write("%s,%s\n" % (key, LABELS[key]))
 

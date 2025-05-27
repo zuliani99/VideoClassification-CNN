@@ -1,12 +1,12 @@
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-import numpy as np
+
 import matplotlib.pyplot as plt
 import os
 from timeit import default_timer as timer
+
 from tqdm import tqdm
-import ipywidgets as widgets
 
 # Defining the main custom Alexnet that ereditate the fucntion of nn.Module
 
@@ -243,8 +243,8 @@ class CNN_Architecture():
 
     def __init__(self, model: torch.nn.Module, train_dataloader: torch.utils.data.DataLoader, 
         val_dataloader: torch.utils.data.DataLoader, optimizer: torch.optim.Optimizer,
-        loss_fn: torch.nn.Module, score_fn, scheduler: torch.optim.Optimizer, device: torch.device,
-        patience = None, save_check = False, load_check_train = False, load_check_evaluate = False):
+        loss_fn: torch.nn.Module, score_fn, scheduler: torch.optim.lr_scheduler.ReduceLROnPlateau, device: torch.device,
+        patience: int, check_path: str, save_check = False, load_check_train = False, load_check_evaluate = False):
 
         self.model = model.to(device)
         self.optimizer = optimizer
@@ -258,12 +258,17 @@ class CNN_Architecture():
         self.load_check_train = load_check_train
         self.load_check_evaluate = load_check_evaluate
         self.patience = patience
+        self.check_path = check_path
+        
         if self.model.__class__.__name__ == 'SingleResCNN':
-            self.model_name = f'{self.model.__class__.__name__}-Stream_Type_{self.model.CNN.stream_type}'
-        else: 
-            self.model_name = self.model.__class__.__name__
-        self.best_checkpoint_filename = f'/content/drive/MyDrive/checkpoints/multiclass/best_checkpoints/{self.model_name}_checkpoint.pth.tar'
-        self.last_checkpoint_filename = f'/content/drive/MyDrive/checkpoints/multiclass/last_checkpoints/{self.model_name}_checkpoint.pth.tar'
+            self.model_name = f'{self.model.__class__.__name__}-Stream_Type_{self.model.CNN.stream_type}' # type: ignore
+        else: self.model_name = self.model.__class__.__name__
+
+        self.best_checkpoint_filename = f'{self.check_path}/best_checkpoints/{self.model_name}_checkpoint.pth.tar'
+        self.last_checkpoint_filename = f'{self.check_path}/last_checkpoints/{self.model_name}_checkpoint.pth.tar'
+
+        for folder in [self.best_checkpoint_filename, self.last_checkpoint_filename]:
+            if not os.path.exists(folder): os.makedirs(folder)
 
         if self.load_check_evaluate: self.__load_best_checkpoint() # If the flag is true I load the best checkpoint
 
@@ -397,7 +402,7 @@ class CNN_Architecture():
         if self.load_check_train and os.path.exists(self.last_checkpoint_filename):
             # If the flag is true I load the last checkpoint, importing the previous results history whereas the best loss and accuracy score
             results, best_val_loss, self.patience, actual_patience, elapsed_train = self.__load_last_checkpoint() 
-        if actual_patience < self.patience - 1: # da commentare il -1
+        if self.patience is not None and actual_patience < self.patience - 1: # da commentare il -1
             for epoch in range(len(results['train_loss']), epochs):
                 train_loss, train_accuracy = 0, 0
 
@@ -475,79 +480,19 @@ class CNN_Architecture():
         return {'model_name': self.model_name, 'results': results}, elapsed_train
 
     
-    
-    def evaluate_and_plot_image(self, labels, images_tensor, class_names, true_label_id, path, transform=None, mean=[0.4588,0.4588,0.4588], std=[0.4588,0.4588,0.4588]):
-        '''
-        PORPOUSE:
-          Perform the evaluation of an image and plot it
-
-        TAKES:
-          - images_tensor: tensor representing the image 
-          - class_names: labels name of our image
-          - path: path of the corresponding image
-          - true_label_id: actual label from the original test.txt file
-          - transform
-          - mean
-          - std
-
-        RETURNS: 
-          None
-        '''
-
-        topk = 3 # Number of top k labels that we want to see
-
-        if transform is not None: image_transform = transform
-        else: image_transform = transforms.Compose([ transforms.Normalize(mean=mean, std=std) ])
-        
-        self.model.to(self.device) # Move the model to device
-
-        self.model.eval() # Evauation phase
-        
-        with torch.inference_mode(): # Allow inference mode
-            transformed_image = image_transform(images_tensor).unsqueeze(dim=0)
-            targets_image_pred = self.model(transformed_image.to(self.device)) # Get the model output
-
-        target_image_pred_probs = torch.softmax(targets_image_pred, dim=1).to('cpu')
-        top_k_probs_labels = torch.topk(target_image_pred_probs, k=topk, dim=1) # Get the probability of the top K labels
-
-        label_pred_names = [labels[list(labels.keys())[lab]] for lab in top_k_probs_labels.indices[0]] # Get the name of the top K labels
-
-        # Images plot
-
-        print(f'Image/s path:\t{path}\nTrue label id:\t{true_label_id}\nTrue label name:\t{class_names}\nTop {topk} Pred:\t{label_pred_names}\nTop {topk} Prob:\t{top_k_probs_labels.values[0].numpy().tolist()}')
-
-
-        if(len(images_tensor.shape) == 3):
-            plt.figure(figsize=(5,5))
-            plt.title(f"Model: {self.model_name}")
-            plt.imshow(images_tensor.permute(1, 2, 0).numpy())
-            plt.axis(False)
-            plt.show()
-        else:
-            ids_frames = []
-            if images_tensor.shape[0] == 2: ids_frames = [1, -1]
-            elif images_tensor.shape[0] == 5: ids_frames = np.arange(5).tolist()
-            else: ids_frames = np.arange(10).tolist()
-
-            tb = widgets.TabBar([f'Frame {str(i)}' for i in ids_frames])
-
-            for img in range(0, images_tensor.shape[0]):
-                with tb.output_to(img, select=(img == 0)):
-                    plt.title(f"Model: {self.model_name} - Frame: {ids_frames[img]}")
-                    plt.imshow(images_tensor[img].permute(1, 2, 0).numpy())
-                    plt.axis(False)
-                    plt.show()
                     
                   
 
-def get_model_dict(n_classes: int) -> dict:
+def get_model_dict(n_classes: int, device: torch.device) -> dict:
     return {
         'SingleRes': SingleResCNN(AlexNet(in_channels=3), num_classes=n_classes),
+
         'SingleResFovea': SingleResCNN(AlexNet(in_channels=3, stream_type='fovea'), num_classes=n_classes),
         'SingleResContext': SingleResCNN(AlexNet(in_channels=3, stream_type='context'), num_classes=n_classes),
+        
         'MultiRes': MultiResCNN(AlexNet(in_channels=3, stream_type='fovea'), AlexNet(in_channels=3, stream_type='context'), num_classes=n_classes),
         
-        'LateFusion': LateFusionCNN(AlexNet(in_channels=3), AlexNet(in_channels=3), num_classes=n_classes),
+        'LateFusion': LateFusionCNN(AlexNet(in_channels=3), AlexNet(in_channels=3), num_classes=n_classes, device=device),
         'EarlyFusion': EarlyFusionCNN(AlexNet(in_channels=3, t_frames=[5,1,1]), num_classes=n_classes),
-        'SlowFusion': SlowFusionCNN(AlexNet(in_channels=3, t_frames=[4,2,2]), num_classes=n_classes)
+        'SlowFusion': SlowFusionCNN(AlexNet(in_channels=3, t_frames=[4,2,2]), num_classes=n_classes, device=device)
     }
