@@ -3,7 +3,8 @@ from datetime import datetime
 import torch.nn as nn
 from utils import set_seeds, get_device, accuracy_score, train_evaluate
 from get_dataset import get_dataset, check_consistency, get_inital_path
-from models import get_model_dict, CNN_Architecture
+from models.models import get_model_dict
+from models.traineval import ModelTrainEval
 from dataset_fn import get_torch_Dataloader
 
 import logging
@@ -44,7 +45,7 @@ def start(args: argparse.Namespace) -> None:
         optimizer = torch.optim.SGD(params=cnn.parameters(), lr=1e-3, momentum=0.9, weight_decay=5e-5) # Optimizer 
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.1, patience=2) # Scheduler
 
-        CNN_arch_single = CNN_Architecture(model = cnn, 
+        CNN_arch_single = ModelTrainEval(model = cnn, 
             train_dataloader = dataloaders['train'],
             val_dataloader = dataloaders['val'],
             optimizer = optimizer,
