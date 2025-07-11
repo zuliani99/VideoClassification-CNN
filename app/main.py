@@ -1,10 +1,10 @@
 import os, argparse, torch
 from datetime import datetime
 import torch.nn as nn
+from models.dl_models import get_model_dict
+from models.traineval import ModelTrainEval
 from utils import set_seeds, get_device, accuracy_score, train_evaluate
 from get_dataset import get_dataset, check_consistency, get_inital_path
-from models.models import get_model_dict
-from models.traineval import ModelTrainEval
 from dataset_fn import get_torch_Dataloader
 
 import logging

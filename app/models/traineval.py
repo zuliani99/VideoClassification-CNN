@@ -1,7 +1,11 @@
 
 import torch
 from tqdm import tqdm
-import timer
+from time import perf_counter as timer
+import os
+
+import logging
+logger = logging.getLogger(__name__)
 
 # CNN Architecture to perform the Train and Evaluation steps saving the results
 
@@ -55,12 +59,12 @@ class ModelTrainEval():
         RETURNS: None
         '''
 
-        print(f'=> Saving Checkpoint to {checkpoint_filename.split("/")[6]}')
+        logger.info(f'=> Saving Checkpoint to {checkpoint_filename.split("/")[6]}')
         checkpoint = {'state_dict': self.model.state_dict(), 'optimizer': self.optimizer.state_dict(), 'scheduler': self.scheduler.state_dict(),
                       'patience': self.patience, 'actual_patience': actual_patience, 'results': results, 'best_val_loss': best_val_loss,
                       'elapsed_train': elapsed_train}
         torch.save(checkpoint, checkpoint_filename)
-        print(' DONE\n')
+        logger.info(' DONE\n')
 
 
     
@@ -73,12 +77,12 @@ class ModelTrainEval():
           None
         '''
 
-        print('=> Loading Best Checkpoint')
+        logger.info('=> Loading Best Checkpoint')
         checkpoint = torch.load(self.best_checkpoint_filename, map_location=self.device)
         self.model.load_state_dict(checkpoint['state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer'])
         self.scheduler.load_state_dict(checkpoint['scheduler'])
-        print(' DONE\n')
+        logger.info(' DONE\n')
 
 
 
@@ -91,12 +95,12 @@ class ModelTrainEval():
           results fit history
         '''
 
-        print('=> Loading Last Checkpoint')
+        logger.info('=> Loading Last Checkpoint')
         checkpoint = torch.load(self.last_checkpoint_filename, map_location=self.device)
         self.model.load_state_dict(checkpoint['state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer'])
         self.scheduler.load_state_dict(checkpoint['scheduler'])
-        print(' DONE\n')
+        logger.info(' DONE\n')
         return checkpoint['results'], checkpoint['best_val_loss'], checkpoint['patience'], checkpoint['actual_patience'], checkpoint['elapsed_train']
 
     
@@ -220,7 +224,7 @@ class ModelTrainEval():
                 results['val_loss'].append(val_loss)
                 results['val_accuracy'].append(val_accuracy)
 
-                print('Epoch [{}], train_loss: {:.6f}, train_accuracy: {:.6f}, val_loss: {:.6f}, val_accuracy: {:.6f} \n'.format(
+                logger.info('Epoch [{}], train_loss: {:.6f}, train_accuracy: {:.6f}, val_loss: {:.6f}, val_accuracy: {:.6f} \n'.format(
                       epoch + 1, train_loss, train_accuracy, val_loss, val_accuracy))
                 
 
@@ -235,7 +239,7 @@ class ModelTrainEval():
                             actual_patience += 1
                             if actual_patience >= self.patience: # Process the Early Stopping
                                 self.__save_checkpoint(self.last_checkpoint_filename, val_loss, results, actual_patience, elapsed_train) # Save last checkpoint with updated actual_patience
-                                print(f'Early stopping, validation loss do not decreased for {self.patience} epochs')
+                                logger.info(f'Early stopping, validation loss do not decreased for {self.patience} epochs')
                                 pbar.close() # Closing the progress bar before exiting from the train loop
                                 break
 

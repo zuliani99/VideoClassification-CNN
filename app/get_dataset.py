@@ -1,5 +1,5 @@
 import yt_dlp, os
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import cv2, shutil, random
 from concurrent.futures import ProcessPoolExecutor
 import multiprocessing
@@ -47,8 +47,8 @@ def download_zip_file(url: str, zip_f_name: str) -> None:
 
     response = requests.get(url, stream=True)
     z = zipfile.ZipFile(io.BytesIO(response.content))
-    z.extractall(zip_f_name)
-    
+    # Extract all files directly into initial_ds_path, flattening the structure
+    z.extractall(os.path.dirname(zip_f_name))
 
 
 def extract_frames(capture, directory, idx_bag, start_frame, end_frame):
@@ -222,7 +222,7 @@ def get_dataset(args: argparse.Namespace) -> None:
     if not os.path.exists(path):
         download_zip_file(
             url='https://github.com/gtoderici/sports-1m-dataset/archive/refs/heads/master.zip',
-            zip_f_name=os.path.join(initial_ds_path, 'sports-1m-dataset-master.zip')
+            zip_f_name=os.path.join(initial_ds_path, 'sports-1m-dataset-master')
         )    
 
     
